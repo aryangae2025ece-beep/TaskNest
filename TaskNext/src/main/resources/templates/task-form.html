@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head(${heading})}"></head>
+<body>
+<div class="app">
+    <aside th:replace="~{fragments :: sidebar}"></aside>
+
+    <main class="main">
+        <header class="page-head">
+            <div>
+                <h1 th:text="${heading}">Add task</h1>
+                <p class="sub">Give it a due date and priority so it shows up when it matters.</p>
+            </div>
+        </header>
+
+        <form class="form" th:action="@{/tasks}" th:object="${taskForm}" method="post" novalidate>
+            <input type="hidden" th:field="*{id}">
+
+            <div class="field">
+                <label for="title">Title</label>
+                <input type="text" id="title" th:field="*{title}" maxlength="150" autofocus
+                       placeholder="e.g. Submit database report">
+                <p class="error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Error</p>
+            </div>
+
+            <div class="field">
+                <label for="description">Notes <span class="opt">(optional)</span></label>
+                <textarea id="description" th:field="*{description}" rows="4" maxlength="1000"
+                          placeholder="Anything you want to remember"></textarea>
+                <p class="error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Error</p>
+            </div>
+
+            <div class="field-row">
+                <div class="field">
+                    <label for="listId">List</label>
+                    <select id="listId" th:field="*{listId}">
+                        <option th:each="l : ${allLists}" th:value="${l.id}" th:text="${l.name}">List</option>
+                    </select>
+                    <p class="error" th:if="${#fields.hasErrors('listId')}" th:errors="*{listId}">Error</p>
+                </div>
+                <div class="field">
+                    <label for="dueDate">Due date <span class="opt">(optional)</span></label>
+                    <input type="date" id="dueDate" th:field="*{dueDate}">
+                    <p class="error" th:if="${#fields.hasErrors('dueDate')}" th:errors="*{dueDate}">Error</p>
+                </div>
+            </div>
+
+            <fieldset class="field">
+                <legend>Priority</legend>
+                <div class="segmented">
+                    <label th:each="p : ${priorities}" class="seg" th:classappend="${p.css}">
+                        <input type="radio" th:field="*{priority}" th:value="${p}">
+                        <span th:text="${p.label}">High</span>
+                    </label>
+                </div>
+                <p class="error" th:if="${#fields.hasErrors('priority')}" th:errors="*{priority}">Error</p>
+            </fieldset>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Save task</button>
+                <a class="btn btn-ghost" th:href="@{/}">Cancel</a>
+            </div>
+        </form>
+    </main>
+</div>
+</body>
+</html>

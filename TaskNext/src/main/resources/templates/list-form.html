@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head(${heading})}"></head>
+<body>
+<div class="app">
+    <aside th:replace="~{fragments :: sidebar}"></aside>
+
+    <main class="main">
+        <header class="page-head">
+            <div>
+                <h1 th:text="${heading}">New list</h1>
+                <p class="sub">Lists group related tasks, like a course, a club or errands.</p>
+            </div>
+        </header>
+
+        <form class="form" th:action="@{/lists}" th:object="${listForm}" method="post" novalidate>
+            <input type="hidden" th:field="*{id}">
+
+            <div class="field">
+                <label for="name">Name</label>
+                <input type="text" id="name" th:field="*{name}" maxlength="60" autofocus
+                       placeholder="e.g. Robotics Club">
+                <p class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Error</p>
+            </div>
+
+            <div class="field">
+                <label for="description">Description <span class="opt">(optional)</span></label>
+                <input type="text" id="description" th:field="*{description}" maxlength="255"
+                       placeholder="What goes in this list?">
+                <p class="error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Error</p>
+            </div>
+
+            <fieldset class="field">
+                <legend>Colour</legend>
+                <div class="swatches">
+                    <label th:each="c : ${palette}" class="swatch">
+                        <input type="radio" th:field="*{color}" th:value="${c}">
+                        <span th:style="'background:' + ${c}" th:title="${c}"></span>
+                    </label>
+                </div>
+                <p class="error" th:if="${#fields.hasErrors('color')}" th:errors="*{color}">Error</p>
+            </fieldset>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Save list</button>
+                <a class="btn btn-ghost" th:href="@{/}">Cancel</a>
+            </div>
+        </form>
+
+        <form class="danger-zone" th:if="${listForm != null and listForm.id != null}"
+              th:action="@{/lists/{id}/delete(id=${listForm.id})}" method="post"
+              data-confirm="Delete this list and all of its tasks? This can't be undone.">
+            <div>
+                <h2>Delete this list</h2>
+                <p>This also deletes every task inside it.</p>
+            </div>
+            <button type="submit" class="btn btn-danger">Delete list</button>
+        </form>
+    </main>
+</div>
+</body>
+</html>

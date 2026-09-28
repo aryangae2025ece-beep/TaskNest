@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${title} + ' - TaskNext'">TaskNext</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script th:src="@{/js/app.js}" defer></script>
+</head>
+<body>
+<aside th:fragment="sidebar" class="sidebar">
+    <a class="brand" th:href="@{/}">
+        <span class="brand-mark" aria-hidden="true">&#10003;</span>
+        <span>TaskNext</span>
+    </a>
+
+    <nav class="nav" aria-label="Task views">
+        <a th:href="@{/}" th:classappend="${activeView == 'all'} ? 'active'">
+            <span>All tasks</span><span class="count" th:text="${navCounts['open']}">0</span>
+        </a>
+        <a th:href="@{/(view='today')}" th:classappend="${activeView == 'today'} ? 'active'">
+            <span>Due today</span><span class="count" th:text="${navCounts['today']}">0</span>
+        </a>
+        <a th:href="@{/(view='upcoming')}" th:classappend="${activeView == 'upcoming'} ? 'active'">
+            <span>Upcoming</span><span class="count" th:text="${navCounts['upcoming']}">0</span>
+        </a>
+        <a th:href="@{/(view='overdue')}" th:classappend="${activeView == 'overdue'} ? 'active'">
+            <span>Overdue</span><span class="count count-warn" th:classappend="${navCounts['overdue'] == 0} ? 'count-zero'" th:text="${navCounts['overdue']}">0</span>
+        </a>
+        <a th:href="@{/(view='completed')}" th:classappend="${activeView == 'completed'} ? 'active'">
+            <span>Completed</span><span class="count" th:text="${navCounts['completed']}">0</span>
+        </a>
+    </nav>
+
+    <div class="side-head">
+        <span>Lists</span>
+        <a class="side-add" th:href="@{/lists/new}" title="Create a new list" aria-label="Create a new list">+</a>
+    </div>
+    <nav class="nav lists" aria-label="Your lists">
+        <a th:each="l : ${navLists}" th:href="@{/(list=${l.id})}"
+           th:classappend="${activeListId != null and activeListId == l.id} ? 'active'">
+            <span class="list-name"><i class="dot" th:style="'background:' + ${l.color}"></i><span th:text="${l.name}">List</span></span>
+            <span class="count" th:text="${l.done} + '/' + ${l.total}">0/0</span>
+        </a>
+        <p class="side-empty" th:if="${#lists.isEmpty(navLists)}">No lists yet.</p>
+    </nav>
+</aside>
+</body>
+</html>

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Something went wrong - TaskNext</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="error-page">
+<main class="error-box">
+    <p class="error-code" th:text="${status}">404</p>
+    <h1 th:text="${status == 404} ? 'We couldn\'t find that' : 'Something went wrong'">We couldn't find that</h1>
+    <p th:text="${message != null and !message.isEmpty()} ? ${message} : 'Try going back to your tasks.'">Try going back to your tasks.</p>
+    <a class="btn btn-primary" th:href="@{/}">Back to tasks</a>
+</main>
+</body>
+</html>
